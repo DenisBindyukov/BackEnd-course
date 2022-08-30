@@ -4,7 +4,7 @@
   "main": "src/index.ts",
   "license": "MIT",
   "dependencies": {
-    "express": "^4.17.3",
+    "express": "^4.17.3"
   },
   "scripts": {
     "dev": "yarn nodemon --inspect dist/index.js",
