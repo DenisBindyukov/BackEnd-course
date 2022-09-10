@@ -6,6 +6,7 @@ const app = express();
 const port = process.env.PORT || 5001;
 
 const jsonParserMiddleware = bodyParser.json();
+
 app.use(jsonParserMiddleware);
 
 app.use('/videos', videosRouter)
