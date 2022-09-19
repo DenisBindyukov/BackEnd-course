@@ -9,8 +9,8 @@ const jsonParserMiddleware = bodyParser.json();
 
 app.use(jsonParserMiddleware);
 
-app.use('/videos', videosRouter)
+app.use('/videos', videosRouter);
 
 app.listen(port, () => {
-    console.log(`Example app listening on port ${port}`)
+    console.log(`Example app listening on port ${port}`);
 })

@@ -36,6 +36,19 @@ videosRouter.get('/', (req: Request, res: Response) => {
     res.status(200).send(videos)
 });
 
+videosRouter.get('/:id', (req: Request, res: Response) => {
+    const videoId = req.params.id;
+    const video = videos.find((v) => v.id === +videoId);
+
+    if (!video) {
+        res.status(404).send()
+        return
+    }
+
+    res.status(200).send(video)
+});
+
+
 
 videosRouter.post('/', (req: Request<{}, {}, ReqBodyType>, res: Response) => {
     const {title, author, availableResolutions} = req.body;
@@ -88,7 +101,6 @@ videosRouter.put('/:id', (req: Request<{ id: string }, {}, ReqBodyType>, res: Re
         return
     }
 
-    debugger
     if (title.trim().length === 0 || title.trim().length > 40) {
         res.status(400).send({
             errorsMessages: [
