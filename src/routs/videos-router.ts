@@ -100,6 +100,7 @@ videosRouter.put('/:id', (req: Request<{ id: string }, {}, ReqBodyType>, res: Re
     const videoId = req.params.id;
     const {title, author} = req.body
     const video = videos.find((v) => v.id === +videoId);
+    let errors: any = []
 
     if (!video) {
         res.status(404).send()
@@ -107,7 +108,7 @@ videosRouter.put('/:id', (req: Request<{ id: string }, {}, ReqBodyType>, res: Re
     }
 
     if (!title || title.trim().length === 0 || title.trim().length > 40) {
-        res.status(400).send({
+       errors.push({
             errorsMessages: [
                 {
                     message: 'some error',
@@ -115,11 +116,10 @@ videosRouter.put('/:id', (req: Request<{ id: string }, {}, ReqBodyType>, res: Re
                 }
             ]
         })
-        return
     }
 
     if (!author || author.trim().length === 0 || author.trim().length > 20) {
-        res.status(400).send({
+        errors.push({
             errorsMessages: [
                 {
                     message: 'some error',
@@ -127,7 +127,12 @@ videosRouter.put('/:id', (req: Request<{ id: string }, {}, ReqBodyType>, res: Re
                 }
             ]
         })
-        return
+    }
+
+    if (errors.length === 1) {
+        res.status(400).send(errors[0])
+    } else {
+        res.status(400).send(errors)
     }
 
     videos = videos.map((v) => v.id === +videoId ? {...v, ...req.body} : v);
