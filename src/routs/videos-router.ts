@@ -4,20 +4,20 @@ export const videosRouter = Router({});
 
 export let videos = [
     {
-        id: '0',
+        id: 0,
         title: "Redux",
         author: "Dinis",
-        canBeDownloaded: true,
+        canBeDownloaded: false,
         minAgeRestriction: null,
         createdAt: new Date(),
         publicationDate: new Date(),
         availableResolutions: ['P144']
     },
     {
-        id: '1',
+        id: 1,
         title: "React",
         author: "Dinis",
-        canBeDownloaded: true,
+        canBeDownloaded: false,
         minAgeRestriction: null,
         createdAt: new Date(),
         publicationDate: new Date(),
@@ -38,7 +38,7 @@ videosRouter.get('/', (req: Request, res: Response) => {
 
 videosRouter.get('/:id', (req: Request, res: Response) => {
     const videoId = req.params.id;
-    const video = videos.find((v) => v.id === videoId);
+    const video = videos.find((v) => v.id === +videoId);
 
     if (!video) {
         res.status(404).send()
@@ -53,7 +53,7 @@ videosRouter.get('/:id', (req: Request, res: Response) => {
 videosRouter.post('/', (req: Request<{}, {}, ReqBodyType>, res: Response) => {
     const {title, author, availableResolutions} = req.body;
 
-    if (title.trim().length === 0 || title.trim().length > 40) {
+    if (!title || title.trim().length === 0 || title.trim().length > 40) {
         res.status(400).send({
             errorsMessages: [
                 {
@@ -78,7 +78,7 @@ videosRouter.post('/', (req: Request<{}, {}, ReqBodyType>, res: Response) => {
     }
 
     videos.push({
-        id: new Date().getTime().toString(),
+        id: +new Date().getTime(),
         title,
         author,
         canBeDownloaded: true,
@@ -94,18 +94,18 @@ videosRouter.post('/', (req: Request<{}, {}, ReqBodyType>, res: Response) => {
 videosRouter.put('/:id', (req: Request<{ id: string }, {}, ReqBodyType>, res: Response) => {
     const videoId = req.params.id;
     const {title, author} = req.body
-    const video = videos.find((v) => v.id === videoId);
+    const video = videos.find((v) => v.id === +videoId);
 
     if (!video) {
         res.status(404).send()
         return
     }
 
-    if (title.trim().length === 0 || title.trim().length > 40) {
+    if (!title || title.trim().length === 0 || title.trim().length > 40) {
         res.status(400).send({
             errorsMessages: [
                 {
-                    message: 'Max length title 40 symbols and  this is field necessarily',
+                    message: 'some error',
                     field: "title"
                 }
             ]
@@ -113,11 +113,11 @@ videosRouter.put('/:id', (req: Request<{ id: string }, {}, ReqBodyType>, res: Re
         return
     }
 
-    if (author.trim().length === 0 || author.trim().length > 20) {
+    if (!author || author.trim().length === 0 || author.trim().length > 20) {
         res.status(400).send({
             errorsMessages: [
                 {
-                    message: 'Max length title 20 symbols and  this is field necessarily',
+                    message: 'some error',
                     field: "author"
                 }
             ]
@@ -125,7 +125,7 @@ videosRouter.put('/:id', (req: Request<{ id: string }, {}, ReqBodyType>, res: Re
         return
     }
 
-    videos = videos.map((v) => v.id === videoId ? {...v, ...req.body} : v);
+    videos = videos.map((v) => v.id === +videoId ? {...v, ...req.body} : v);
 
     res.status(204).send()
 });
@@ -133,13 +133,13 @@ videosRouter.put('/:id', (req: Request<{ id: string }, {}, ReqBodyType>, res: Re
 
 videosRouter.delete('/:id', (req: Request<{ id: string }>, res: Response) => {
     const videoId = req.params.id;
-    const video = videos.find((v) => v.id === videoId);
+    const video = videos.find((v) => v.id === +videoId);
     if (!video) {
         res.status(404).send()
         return
     }
 
-    const index = videos.findIndex((v) => v.id === videoId);
+    const index = videos.findIndex((v) => v.id === +videoId);
     videos.splice(index, 1)
 
     res.status(204).send()
