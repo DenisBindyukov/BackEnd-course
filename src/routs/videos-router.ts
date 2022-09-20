@@ -12,17 +12,7 @@ export let videos = [
         title: "Redux",
         author: "Dinis",
         canBeDownloaded: false,
-        minAgeRestriction: 18,
-        createdAt: todayDay,
-        publicationDate: todayDay,
-        availableResolutions: ['P144']
-    },
-    {
-        id: 1,
-        title: "React",
-        author: "Dinis",
-        canBeDownloaded: false,
-        minAgeRestriction: 18,
+        minAgeRestriction: 18 as null | number,
         createdAt: todayDay,
         publicationDate: todayDay,
         availableResolutions: ['P144']
@@ -119,7 +109,7 @@ videosRouter.post('/', (req: Request<{}, {}, ReqBodyType>, res: Response) => {
         title,
         author,
         canBeDownloaded: false,
-        minAgeRestriction: 18,
+        minAgeRestriction: null,
         createdAt: date.toISOString(),
         publicationDate: addDays(date, 1).toISOString(),
         availableResolutions: ['P144']
