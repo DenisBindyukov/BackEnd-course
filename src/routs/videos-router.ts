@@ -1,6 +1,9 @@
 import {Request, Response, Router} from "express";
 
+const todayDay = new Date().toISOString()
+
 export const videosRouter = Router({});
+
 
 export let videos = [
     {
@@ -9,8 +12,8 @@ export let videos = [
         author: "Dinis",
         canBeDownloaded: false,
         minAgeRestriction: null,
-        createdAt: new Date(),
-        publicationDate: new Date(),
+        createdAt: todayDay,
+        publicationDate: todayDay,
         availableResolutions: ['P144']
     },
     {
@@ -19,8 +22,8 @@ export let videos = [
         author: "Dinis",
         canBeDownloaded: false,
         minAgeRestriction: null,
-        createdAt: new Date(),
-        publicationDate: new Date(),
+        createdAt: todayDay,
+        publicationDate: todayDay,
         availableResolutions: ['P144']
     }
 ];
@@ -86,14 +89,23 @@ videosRouter.post('/', (req: Request<{}, {}, ReqBodyType>, res: Response) => {
         return;
     }
 
+    function addDays(date: Date, days: number) {
+        const result = new Date(date);
+        result.setDate(result.getDate() + days);
+        return result;
+    }
+
+
+    const date = new Date();
+
     const newVideos = {
         id: +new Date().getTime(),
         title,
         author,
         canBeDownloaded: false,
         minAgeRestriction: null,
-        createdAt: new Date(),
-        publicationDate: new Date(),
+        createdAt: date.toISOString(),
+        publicationDate: addDays(date, 1).toISOString(),
         availableResolutions: ['P144']
     }
 
