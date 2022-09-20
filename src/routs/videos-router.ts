@@ -4,23 +4,23 @@ export const videosRouter = Router({});
 
 export let videos = [
     {
-        id: 0,
+        id: '0',
         title: "Redux",
         author: "Dinis",
         canBeDownloaded: true,
         minAgeRestriction: null,
-        createdAt: "2022-09-06T18:58:16.046Z",
-        publicationDate: "2022-09-06T18:58:16.046Z",
+        createdAt: new Date(),
+        publicationDate: new Date(),
         availableResolutions: ['P144']
     },
     {
-        id: 1,
+        id: '1',
         title: "React",
         author: "Dinis",
         canBeDownloaded: true,
         minAgeRestriction: null,
-        createdAt: "2022-09-06T18:58:16.046Z",
-        publicationDate: "2022-09-06T18:58:16.046Z",
+        createdAt: new Date(),
+        publicationDate: new Date(),
         availableResolutions: ['P144']
     }
 ];
@@ -38,7 +38,7 @@ videosRouter.get('/', (req: Request, res: Response) => {
 
 videosRouter.get('/:id', (req: Request, res: Response) => {
     const videoId = req.params.id;
-    const video = videos.find((v) => v.id === +videoId);
+    const video = videos.find((v) => v.id === videoId);
 
     if (!video) {
         res.status(404).send()
@@ -78,13 +78,13 @@ videosRouter.post('/', (req: Request<{}, {}, ReqBodyType>, res: Response) => {
     }
 
     videos.push({
-        id: new Date().getMilliseconds(),
+        id: new Date().getTime().toString(),
         title,
         author,
         canBeDownloaded: true,
         minAgeRestriction: null,
-        createdAt: "2022-09-06T18:58:16.046Z",
-        publicationDate: "2022-09-06T18:58:16.046Z",
+        createdAt: new Date(),
+        publicationDate: new Date(),
         availableResolutions: ['P144']
     },)
 
@@ -94,7 +94,7 @@ videosRouter.post('/', (req: Request<{}, {}, ReqBodyType>, res: Response) => {
 videosRouter.put('/:id', (req: Request<{ id: string }, {}, ReqBodyType>, res: Response) => {
     const videoId = req.params.id;
     const {title, author} = req.body
-    const video = videos.find((v) => v.id === +videoId);
+    const video = videos.find((v) => v.id === videoId);
 
     if (!video) {
         res.status(404).send()
@@ -125,7 +125,7 @@ videosRouter.put('/:id', (req: Request<{ id: string }, {}, ReqBodyType>, res: Re
         return
     }
 
-    videos = videos.map((v) => v.id === +videoId ? {...v, ...req.body} : v);
+    videos = videos.map((v) => v.id === videoId ? {...v, ...req.body} : v);
 
     res.status(204).send()
 });
@@ -133,13 +133,13 @@ videosRouter.put('/:id', (req: Request<{ id: string }, {}, ReqBodyType>, res: Re
 
 videosRouter.delete('/:id', (req: Request<{ id: string }>, res: Response) => {
     const videoId = req.params.id;
-    const video = videos.find((v) => v.id === +videoId);
+    const video = videos.find((v) => v.id === videoId);
     if (!video) {
         res.status(404).send()
         return
     }
 
-    const index = videos.findIndex((v) => v.id === +videoId);
+    const index = videos.findIndex((v) => v.id === videoId);
     videos.splice(index, 1)
 
     res.status(204).send()
