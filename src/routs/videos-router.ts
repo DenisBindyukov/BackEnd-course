@@ -52,29 +52,32 @@ videosRouter.get('/:id', (req: Request, res: Response) => {
 
 videosRouter.post('/', (req: Request<{}, {}, ReqBodyType>, res: Response) => {
     const {title, author, availableResolutions} = req.body;
+    let errors = []
 
     if (!title || title.trim().length === 0 || title.trim().length > 40) {
-        res.status(400).send({
+        errors.push({
             errorsMessages: [
                 {
-                    message: 'Max length title 40 symbols and  this is field necessarily',
+                    message: 'some error',
                     field: "title"
                 }
             ]
         })
-        return
     }
 
     if (author.trim().length === 0 || author.trim().length > 20) {
-        res.status(400).send({
+        errors.push({
             errorsMessages: [
                 {
-                    message: 'Max length title 20 symbols and  this is field necessarily',
+                    message: 'some error',
                     field: "author"
                 }
             ]
         })
-        return
+    }
+
+    if (errors.length) {
+        res.status(400).send(errors)
     }
 
     videos.push({
