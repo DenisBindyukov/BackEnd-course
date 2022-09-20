@@ -12,7 +12,7 @@ export let videos = [
         title: "Redux",
         author: "Dinis",
         canBeDownloaded: false,
-        minAgeRestriction: null,
+        minAgeRestriction: 18,
         createdAt: todayDay,
         publicationDate: todayDay,
         availableResolutions: ['P144']
@@ -22,7 +22,7 @@ export let videos = [
         title: "React",
         author: "Dinis",
         canBeDownloaded: false,
-        minAgeRestriction: null,
+        minAgeRestriction: 18,
         createdAt: todayDay,
         publicationDate: todayDay,
         availableResolutions: ['P144']
@@ -33,6 +33,7 @@ interface ReqBodyType {
     title: string
     author: string
     canBeDownloaded: any
+    minAgeRestriction: number
     availableResolutions: string[]
 }
 
@@ -54,7 +55,7 @@ videosRouter.get('/:id', (req: Request, res: Response) => {
 
 
 videosRouter.post('/', (req: Request<{}, {}, ReqBodyType>, res: Response) => {
-    const {title, author, canBeDownloaded, availableResolutions} = req.body;
+    const {title, author, canBeDownloaded, availableResolutions, minAgeRestriction} = req.body;
     let errors: any = {
         errorsMessages: []
     }
@@ -80,6 +81,13 @@ videosRouter.post('/', (req: Request<{}, {}, ReqBodyType>, res: Response) => {
         })
     }
 
+    if (minAgeRestriction > 18) {
+        errors.errorsMessages.push({
+            message: 'some error',
+            field: "minAgeRestriction"
+        })
+    }
+
     for (let i = 0; i < availableResolutions.length; i++) {
        if (!arrayAvailableResolutions.includes(availableResolutions[i])) {
            errors.errorsMessages.push({
@@ -89,6 +97,7 @@ videosRouter.post('/', (req: Request<{}, {}, ReqBodyType>, res: Response) => {
            break;
        }
     }
+
 
     if (errors.errorsMessages.length) {
         res.status(400).send(errors)
@@ -110,7 +119,7 @@ videosRouter.post('/', (req: Request<{}, {}, ReqBodyType>, res: Response) => {
         title,
         author,
         canBeDownloaded: false,
-        minAgeRestriction: null,
+        minAgeRestriction: 18,
         createdAt: date.toISOString(),
         publicationDate: addDays(date, 1).toISOString(),
         availableResolutions: ['P144']
@@ -123,7 +132,7 @@ videosRouter.post('/', (req: Request<{}, {}, ReqBodyType>, res: Response) => {
 
 videosRouter.put('/:id', (req: Request<{ id: string }, {}, ReqBodyType>, res: Response) => {
     const videoId = req.params.id;
-    const {title, author, canBeDownloaded} = req.body
+    const {title, author, canBeDownloaded, minAgeRestriction} = req.body
     const video = videos.find((v) => v.id === +videoId);
     let errors: any = {
         errorsMessages: []
@@ -152,6 +161,13 @@ videosRouter.put('/:id', (req: Request<{ id: string }, {}, ReqBodyType>, res: Re
         errors.errorsMessages.push({
             message: 'some error',
             field: "canBeDownloaded"
+        })
+    }
+
+    if (minAgeRestriction > 18) {
+        errors.errorsMessages.push({
+            message: 'some error',
+            field: "minAgeRestriction"
         })
     }
 
