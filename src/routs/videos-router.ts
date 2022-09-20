@@ -130,7 +130,6 @@ videosRouter.put('/:id', (req: Request<{ id: string }, {}, ReqBodyType>, res: Re
     }
 
     if (typeof canBeDownloaded !== 'boolean') {
-        debugger
         errors.errorsMessages.push({
             message: 'some error',
             field: "canBeDownloaded"
