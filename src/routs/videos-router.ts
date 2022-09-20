@@ -79,12 +79,7 @@ videosRouter.post('/', (req: Request<{}, {}, ReqBodyType>, res: Response) => {
         })
     }
 
-    if (errors.errorsMessages.length === 1) {
-        res.status(400).send(errors.errorsMessages[0])
-        return
-    }
-
-    if (errors.errorsMessages.length > 1) {
+    if (errors.errorsMessages.length) {
         res.status(400).send(errors)
         return;
     }
@@ -148,11 +143,7 @@ videosRouter.put('/:id', (req: Request<{ id: string }, {}, ReqBodyType>, res: Re
         })
     }
 
-    if (errors.errorsMessages.length === 1) {
-        res.status(400).send(errors.errorsMessages[0])
-        return;
-    }
-    if (errors.errorsMessages.length > 1) {
+    if (errors.errorsMessages.length) {
         res.status(400).send(errors)
         return;
     }
