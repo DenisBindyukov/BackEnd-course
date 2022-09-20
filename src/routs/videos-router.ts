@@ -76,7 +76,9 @@ videosRouter.post('/', (req: Request<{}, {}, ReqBodyType>, res: Response) => {
         })
     }
 
-    if (errors.length) {
+    if (errors.length === 1) {
+        res.status(400).send(errors[0])
+    } else {
         res.status(400).send(errors)
     }
 
