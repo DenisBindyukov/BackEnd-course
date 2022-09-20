@@ -4,6 +4,7 @@ const todayDay = new Date().toISOString()
 
 export const videosRouter = Router({});
 
+const arrayAvailableResolutions = ['P144', 'P240', 'P360', 'P480', 'P720', 'P1080', 'P1440', 'P2160'];
 
 export let videos = [
     {
@@ -53,7 +54,7 @@ videosRouter.get('/:id', (req: Request, res: Response) => {
 
 
 videosRouter.post('/', (req: Request<{}, {}, ReqBodyType>, res: Response) => {
-    const {title, author, canBeDownloaded} = req.body;
+    const {title, author, canBeDownloaded, availableResolutions} = req.body;
     let errors: any = {
         errorsMessages: []
     }
@@ -68,7 +69,7 @@ videosRouter.post('/', (req: Request<{}, {}, ReqBodyType>, res: Response) => {
     if (author.trim().length === 0 || author.trim().length > 20) {
         errors.errorsMessages.push({
             message: 'some error',
-            field: "author"
+            field: "availableResolutions"
         })
     }
 
@@ -79,10 +80,21 @@ videosRouter.post('/', (req: Request<{}, {}, ReqBodyType>, res: Response) => {
         })
     }
 
+    for (let i = 0; i < availableResolutions.length; i++) {
+       if (!arrayAvailableResolutions.includes(availableResolutions[i])) {
+           errors.errorsMessages.push({
+               message: 'some error',
+               field: "availableResolutions"
+           })
+           break;
+       }
+    }
+
     if (errors.errorsMessages.length) {
         res.status(400).send(errors)
         return;
     }
+
 
     function addDays(date: Date, days: number) {
         const result = new Date(date);
