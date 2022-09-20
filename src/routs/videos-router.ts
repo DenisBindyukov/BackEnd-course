@@ -2,7 +2,7 @@ import {Request, Response, Router} from "express";
 
 export const videosRouter = Router({});
 
-let videos = [
+export let videos = [
     {
         id: 0,
         title: "Redux",
