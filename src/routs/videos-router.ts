@@ -57,10 +57,10 @@ videosRouter.post('/', (req: Request<{}, {}, ReqBodyType>, res: Response) => {
         })
     }
 
-    if (author.trim().length === 0 || author.trim().length > 20) {
+    if (!author.trim()|| author.length > 20) {
         errors.errorsMessages.push({
             message: 'some error',
-            field: "availableResolutions"
+            field: "author"
         })
     }
 
@@ -77,16 +77,16 @@ videosRouter.post('/', (req: Request<{}, {}, ReqBodyType>, res: Response) => {
             field: "minAgeRestriction"
         })
     }
-
-    for (let i = 0; i < availableResolutions.length; i++) {
-       if (!arrayAvailableResolutions.includes(availableResolutions[i])) {
-           errors.errorsMessages.push({
-               message: 'some error',
-               field: "availableResolutions"
-           })
-           break;
-       }
-    }
+    //
+    // for (let i = 0; i < availableResolutions.length; i++) {
+    //    if (!arrayAvailableResolutions.includes(availableResolutions[i])) {
+    //        errors.errorsMessages.push({
+    //            message: 'some error',
+    //            field: "availableResolutions"
+    //        })
+    //        break;
+    //    }
+    // }
 
 
     if (errors.errorsMessages.length) {
@@ -133,14 +133,14 @@ videosRouter.put('/:id', (req: Request<{ id: string }, {}, ReqBodyType>, res: Re
         return
     }
 
-    if (!title || title.trim().length === 0 || title.trim().length > 40) {
+    if (!title || !title.trim() || title.length > 40) {
         errors.errorsMessages.push({
             message: 'some error',
             field: "title"
         })
     }
 
-    if (!author || author.trim().length === 0 || author.trim().length > 20) {
+    if (!author || !author.trim() || author.length > 20) {
         errors.errorsMessages.push({
             message: 'some error',
             field: "author"
