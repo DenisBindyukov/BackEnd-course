@@ -10,6 +10,7 @@ const jsonParserMiddleware = bodyParser.json();
 
 app.use(jsonParserMiddleware);
 
+
 app.use('/videos', videosRouter);
 app.use('/testing', testingRouter);
 
