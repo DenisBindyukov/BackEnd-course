@@ -32,7 +32,6 @@ interface ReqBodyType {
 }
 
 videosRouter.get('/', (req: Request, res: Response) => {
-    console.log('render')
     res.status(200).send(videos)
 });
 
@@ -47,7 +46,6 @@ videosRouter.get('/:id', (req: Request, res: Response) => {
 
     res.status(200).send(video)
 });
-
 
 
 videosRouter.post('/', (req: Request<{}, {}, ReqBodyType>, res: Response) => {
@@ -78,22 +76,39 @@ videosRouter.post('/', (req: Request<{}, {}, ReqBodyType>, res: Response) => {
 
     if (errors.length === 1) {
         res.status(400).send(errors[0])
-    } else {
-        res.status(400).send(errors)
+        return
     }
 
-    videos.push({
-        id: +new Date().getTime(),
-        title,
-        author,
-        canBeDownloaded: true,
-        minAgeRestriction: null,
-        createdAt: new Date(),
-        publicationDate: new Date(),
-        availableResolutions: ['P144']
-    },)
+    if (errors.length > 1) {
+        res.status(400).send(errors)
+        return;
+    }
 
-    res.status(201).send(videos[videos.length - 1])
+    // videos.push({
+    //     id: +new Date().getTime(),
+    //     title,
+    //     author,
+    //     canBeDownloaded: false,
+    //     minAgeRestriction: null,
+    //     createdAt: new Date(),
+    //     publicationDate: new Date(),
+    //     availableResolutions: ['P144']
+    // },)
+
+    const newVideos = {
+        id: +new Date().getTime(),
+            title,
+            author,
+            canBeDownloaded: false,
+            minAgeRestriction: null,
+            createdAt: new Date(),
+            publicationDate: new Date(),
+            availableResolutions: ['P144']
+    }
+
+    videos.push(newVideos)
+
+    res.status(201).send(newVideos)
 });
 
 videosRouter.put('/:id', (req: Request<{ id: string }, {}, ReqBodyType>, res: Response) => {
@@ -108,7 +123,7 @@ videosRouter.put('/:id', (req: Request<{ id: string }, {}, ReqBodyType>, res: Re
     }
 
     if (!title || title.trim().length === 0 || title.trim().length > 40) {
-       errors.push({
+        errors.push({
             errorsMessages: [
                 {
                     message: 'some error',
@@ -131,8 +146,11 @@ videosRouter.put('/:id', (req: Request<{ id: string }, {}, ReqBodyType>, res: Re
 
     if (errors.length === 1) {
         res.status(400).send(errors[0])
-    } else {
+        return;
+    }
+    if (errors.length > 1) {
         res.status(400).send(errors)
+        return;
     }
 
     videos = videos.map((v) => v.id === +videoId ? {...v, ...req.body} : v);
