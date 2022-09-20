@@ -24,6 +24,7 @@ interface ReqBodyType {
     author: string
     canBeDownloaded: any
     minAgeRestriction: number
+    publicationDate: any
     availableResolutions: string[]
 }
 
@@ -77,16 +78,17 @@ videosRouter.post('/', (req: Request<{}, {}, ReqBodyType>, res: Response) => {
             field: "minAgeRestriction"
         })
     }
-    //
-    // for (let i = 0; i < availableResolutions.length; i++) {
-    //    if (!arrayAvailableResolutions.includes(availableResolutions[i])) {
-    //        errors.errorsMessages.push({
-    //            message: 'some error',
-    //            field: "availableResolutions"
-    //        })
-    //        break;
-    //    }
-    // }
+
+
+    for (let i = 0; i < availableResolutions.length; i++) {
+       if (!arrayAvailableResolutions.includes(availableResolutions[i])) {
+           errors.errorsMessages.push({
+               message: 'some error',
+               field: "availableResolutions"
+           })
+           break;
+       }
+    }
 
 
     if (errors.errorsMessages.length) {
@@ -122,7 +124,7 @@ videosRouter.post('/', (req: Request<{}, {}, ReqBodyType>, res: Response) => {
 
 videosRouter.put('/:id', (req: Request<{ id: string }, {}, ReqBodyType>, res: Response) => {
     const videoId = req.params.id;
-    const {title, author, canBeDownloaded, minAgeRestriction} = req.body
+    const {title, author, canBeDownloaded, minAgeRestriction, publicationDate, availableResolutions} = req.body
     const video = videos.find((v) => v.id === +videoId);
     let errors: any = {
         errorsMessages: []
@@ -159,6 +161,23 @@ videosRouter.put('/:id', (req: Request<{ id: string }, {}, ReqBodyType>, res: Re
             message: 'some error',
             field: "minAgeRestriction"
         })
+    }
+
+    if (typeof publicationDate !== "string") {
+        errors.errorsMessages.push({
+            message: 'some error',
+            field: "publicationDate"
+        })
+    }
+
+    for (let i = 0; i < availableResolutions.length; i++) {
+        if (!arrayAvailableResolutions.includes(availableResolutions[i])) {
+            errors.errorsMessages.push({
+                message: 'some error',
+                field: "availableResolutions"
+            })
+            break;
+        }
     }
 
     if (errors.errorsMessages.length) {
