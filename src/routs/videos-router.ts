@@ -28,6 +28,7 @@ export let videos = [
 interface ReqBodyType {
     title: string
     author: string
+    canBeDownloaded: any
     availableResolutions: string[]
 }
 
@@ -49,61 +50,51 @@ videosRouter.get('/:id', (req: Request, res: Response) => {
 
 
 videosRouter.post('/', (req: Request<{}, {}, ReqBodyType>, res: Response) => {
-    const {title, author, availableResolutions} = req.body;
-    let errors = []
+    const {title, author, canBeDownloaded} = req.body;
+    let errors: any = {
+        errorsMessages: []
+    }
 
     if (!title || title.trim().length === 0 || title.trim().length > 40) {
-        errors.push({
-            errorsMessages: [
-                {
-                    message: 'some error',
-                    field: "title"
-                }
-            ]
+        errors.errorsMessages.push({
+            message: 'some error',
+            field: "title"
         })
     }
 
     if (author.trim().length === 0 || author.trim().length > 20) {
-        errors.push({
-            errorsMessages: [
-                {
-                    message: 'some error',
-                    field: "author"
-                }
-            ]
+        errors.errorsMessages.push({
+            message: 'some error',
+            field: "author"
         })
     }
 
-    if (errors.length === 1) {
-        res.status(400).send(errors[0])
+    if (typeof canBeDownloaded === 'boolean') {
+        errors.errorsMessages.push({
+            message: 'some error',
+            field: "canBeDownloaded"
+        })
+    }
+
+    if (errors.errorsMessages.length === 1) {
+        res.status(400).send(errors.errorsMessages[0])
         return
     }
 
-    if (errors.length > 1) {
+    if (errors.errorsMessages.length > 1) {
         res.status(400).send(errors)
         return;
     }
 
-    // videos.push({
-    //     id: +new Date().getTime(),
-    //     title,
-    //     author,
-    //     canBeDownloaded: false,
-    //     minAgeRestriction: null,
-    //     createdAt: new Date(),
-    //     publicationDate: new Date(),
-    //     availableResolutions: ['P144']
-    // },)
-
     const newVideos = {
         id: +new Date().getTime(),
-            title,
-            author,
-            canBeDownloaded: false,
-            minAgeRestriction: null,
-            createdAt: new Date(),
-            publicationDate: new Date(),
-            availableResolutions: ['P144']
+        title,
+        author,
+        canBeDownloaded: false,
+        minAgeRestriction: null,
+        createdAt: new Date(),
+        publicationDate: new Date(),
+        availableResolutions: ['P144']
     }
 
     videos.push(newVideos)
@@ -113,9 +104,11 @@ videosRouter.post('/', (req: Request<{}, {}, ReqBodyType>, res: Response) => {
 
 videosRouter.put('/:id', (req: Request<{ id: string }, {}, ReqBodyType>, res: Response) => {
     const videoId = req.params.id;
-    const {title, author} = req.body
+    const {title, author, canBeDownloaded} = req.body
     const video = videos.find((v) => v.id === +videoId);
-    let errors: any = []
+    let errors: any = {
+        errorsMessages: []
+    }
 
     if (!video) {
         res.status(404).send()
@@ -123,32 +116,32 @@ videosRouter.put('/:id', (req: Request<{ id: string }, {}, ReqBodyType>, res: Re
     }
 
     if (!title || title.trim().length === 0 || title.trim().length > 40) {
-        errors.push({
-            errorsMessages: [
-                {
-                    message: 'some error',
-                    field: "title"
-                }
-            ]
+        errors.errorsMessages.push({
+            message: 'some error',
+            field: "title"
         })
     }
 
     if (!author || author.trim().length === 0 || author.trim().length > 20) {
-        errors.push({
-            errorsMessages: [
-                {
-                    message: 'some error',
-                    field: "author"
-                }
-            ]
+        errors.errorsMessages.push({
+            message: 'some error',
+            field: "author"
         })
     }
 
-    if (errors.length === 1) {
-        res.status(400).send(errors[0])
+    if (typeof canBeDownloaded !== 'boolean') {
+        debugger
+        errors.errorsMessages.push({
+            message: 'some error',
+            field: "canBeDownloaded"
+        })
+    }
+
+    if (errors.errorsMessages.length === 1) {
+        res.status(400).send(errors.errorsMessages[0])
         return;
     }
-    if (errors.length > 1) {
+    if (errors.errorsMessages.length > 1) {
         res.status(400).send(errors)
         return;
     }
