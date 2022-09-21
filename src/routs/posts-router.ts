@@ -2,9 +2,8 @@ import {Request, Response, Router} from "express";
 
 const todayDay = new Date().toISOString()
 
-export const videosRouter = Router({});
+export const postsRouter = Router({});
 
-const arrayAvailableResolutions = ['P144', 'P240', 'P360', 'P480', 'P720', 'P1080', 'P1440', 'P2160'];
 
 export let videos = [
     {
@@ -28,11 +27,11 @@ interface ReqBodyType {
     availableResolutions: string[]
 }
 
-videosRouter.get('/', (req: Request, res: Response) => {
+postsRouter.get('/', (req: Request, res: Response) => {
     res.status(200).send(videos)
 });
 
-videosRouter.get('/:id', (req: Request, res: Response) => {
+postsRouter.get('/:id', (req: Request, res: Response) => {
     const videoId = req.params.id;
     const video = videos.find((v) => v.id === +videoId);
 
@@ -45,7 +44,7 @@ videosRouter.get('/:id', (req: Request, res: Response) => {
 });
 
 
-videosRouter.post('/', (req: Request<{}, {}, ReqBodyType>, res: Response) => {
+postsRouter.post('/', (req: Request<{}, {}, ReqBodyType>, res: Response) => {
     const {title, author, canBeDownloaded, availableResolutions, minAgeRestriction} = req.body;
     let errors: any = {
         errorsMessages: []
@@ -80,15 +79,6 @@ videosRouter.post('/', (req: Request<{}, {}, ReqBodyType>, res: Response) => {
     }
 
 
-    for (let i = 0; i < availableResolutions.length; i++) {
-       if (!arrayAvailableResolutions.includes(availableResolutions[i])) {
-           errors.errorsMessages.push({
-               message: 'some error',
-               field: "availableResolutions"
-           })
-           break;
-       }
-    }
 
 
     if (errors.errorsMessages.length) {
@@ -122,7 +112,7 @@ videosRouter.post('/', (req: Request<{}, {}, ReqBodyType>, res: Response) => {
     res.status(201).send(newVideos)
 });
 
-videosRouter.put('/:id', (req: Request<{ id: string }, {}, ReqBodyType>, res: Response) => {
+postsRouter.put('/:id', (req: Request<{ id: string }, {}, ReqBodyType>, res: Response) => {
     const videoId = req.params.id;
     const {title, author, canBeDownloaded, minAgeRestriction, publicationDate, availableResolutions} = req.body
     const video = videos.find((v) => v.id === +videoId);
@@ -170,16 +160,6 @@ videosRouter.put('/:id', (req: Request<{ id: string }, {}, ReqBodyType>, res: Re
         })
     }
 
-    for (let i = 0; i < availableResolutions.length; i++) {
-        if (!arrayAvailableResolutions.includes(availableResolutions[i])) {
-            errors.errorsMessages.push({
-                message: 'some error',
-                field: "availableResolutions"
-            })
-            break;
-        }
-    }
-
     if (errors.errorsMessages.length) {
         res.status(400).send(errors)
         return;
@@ -191,7 +171,7 @@ videosRouter.put('/:id', (req: Request<{ id: string }, {}, ReqBodyType>, res: Re
 });
 
 
-videosRouter.delete('/:id', (req: Request<{ id: string }>, res: Response) => {
+postsRouter.delete('/:id', (req: Request<{ id: string }>, res: Response) => {
     const videoId = req.params.id;
     const video = videos.find((v) => v.id === +videoId);
     if (!video) {

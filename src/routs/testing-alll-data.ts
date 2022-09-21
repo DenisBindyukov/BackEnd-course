@@ -1,12 +1,17 @@
 import {Request, Response, Router} from "express";
-import {videos} from './videos-router'
+import {blogRepository} from '../repositories/blogs-repository'
+import {postsRepository} from '../repositories/posts-repository'
 
 export const testingRouter = Router({});
 
 testingRouter.delete('/all-data', (req: Request, res: Response) => {
-    while (videos.length > 0) {
-        videos.pop();
+    const blogsDeleted = blogRepository.deleteAllItems();
+    const postsDeleted = postsRepository.deleteAllItems();
+
+    if (blogsDeleted && postsDeleted) {
+        res.status(204).send()
+    } else {
+        throw new Error('Something went wrong')
     }
 
-    res.status(204).send()
 });

@@ -1,7 +1,8 @@
 import express from 'express';
 import bodyParser from 'body-parser';
-import {videosRouter} from "./routs/videos-router";
+import {blogsRouter} from "./routs/blogs-router";
 import {testingRouter} from "./routs/testing-alll-data";
+import {postsRouter} from "./routs/posts-router";
 
 
 const app = express();
@@ -11,8 +12,9 @@ const jsonParserMiddleware = bodyParser.json();
 
 app.use(jsonParserMiddleware);
 
-app.use('/videos', videosRouter);
-app.use('/testing', testingRouter);
+app.use('/ht_02/api/blogs', blogsRouter);
+app.use('/ht_02/api/posts', postsRouter);
+app.use('/ht_02/api/testing', testingRouter);
 
 app.listen(port, () => {
     console.log(`Example app listening on port ${port}`);
