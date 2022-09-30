@@ -11,9 +11,9 @@ const jsonParserMiddleware = bodyParser.json();
 
 app.use(jsonParserMiddleware);
 
-app.use('/api/blogs', blogsRouter);
-app.use('/api/posts', postsRouter);
-app.use('/api/testing', testingRouter);
+app.use('/ht_02/api/blogs', blogsRouter);
+app.use('/ht_02/api/posts', postsRouter);
+app.use('/ht_02/api/testing/all-data', testingRouter);
 
 app.listen(port, () => {
     console.log(`Example app listening on port ${port}`);
