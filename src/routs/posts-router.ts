@@ -1,5 +1,11 @@
 import {Request, Response, Router} from "express";
 import {postsRepository} from "../repositories/posts-repository";
+import {authGuardMiddleware} from "../middleware/authGuardMiddleware";
+import {
+    postValidationContent,
+    postValidationShortDescription,
+    postValidationTitle, validationMiddleware
+} from "../middleware/validationMiddleware";
 
 export const postsRouter = Router({});
 
@@ -29,18 +35,28 @@ postsRouter.get('/:id', (req: Request, res: Response) => {
 
 });
 
-postsRouter.post('/', (req: Request<{}, {}, PostDtoType>, res: Response) => {
-    const post = postsRepository.createPost(req.body)
+postsRouter.post('/',
+    authGuardMiddleware,
+    postValidationTitle,
+    postValidationShortDescription,
+    postValidationContent,
+    validationMiddleware,(req: Request<{}, {}, PostDtoType>, res: Response) => {
+        const post = postsRepository.createPost(req.body)
 
-    if (post) {
-        res.status(201).send(post)
-    } else {
-        res.status(404).send()
-    }
+        if (post) {
+            res.status(201).send(post)
+        } else {
+            res.status(404).send()
+        }
 
-});
+    });
 
-postsRouter.put('/:id', (req: Request<{ id: string }, {}, PostDtoType>, res: Response) => {
+postsRouter.put('/:id',
+    authGuardMiddleware,
+    postValidationTitle,
+    postValidationShortDescription,
+    postValidationContent,
+    validationMiddleware,(req: Request<{ id: string }, {}, PostDtoType>, res: Response) => {
     const postUpdated = postsRepository.updatePost(req.params.id, req.body)
 
     if (postUpdated) {
@@ -54,7 +70,7 @@ postsRouter.put('/:id', (req: Request<{ id: string }, {}, PostDtoType>, res: Res
 });
 
 
-postsRouter.delete('/:id', (req: Request<{ id: string }>, res: Response) => {
+postsRouter.delete('/:id', authGuardMiddleware, (req: Request<{ id: string }>, res: Response) => {
     const postDeleted = postsRepository.deletePost(req.params.id)
 
     if (postDeleted) {

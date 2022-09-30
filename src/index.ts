@@ -1,12 +1,11 @@
-import express from 'express';
+import express, {Response, Request, NextFunction} from 'express';
 import bodyParser from 'body-parser';
 import {blogsRouter} from "./routs/blogs-router";
 import {testingRouter} from "./routs/testing-alll-data";
 import {postsRouter} from "./routs/posts-router";
 
-
 const app = express();
-const port = process.env.PORT || 5001;
+const port = process.env.PORT || 5002;
 
 const jsonParserMiddleware = bodyParser.json();
 

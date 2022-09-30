@@ -1,5 +1,7 @@
 import {Request, Response, Router} from "express";
 import {blogRepository} from "../repositories/blogs-repository";
+import {authGuardMiddleware} from "../middleware/authGuardMiddleware";
+import {blogValidationName, blogValidationYoutubeUrl, validationMiddleware} from "../middleware/validationMiddleware";
 
 export const blogsRouter = Router({});
 
@@ -24,12 +26,20 @@ blogsRouter.get('/:id', (req: Request, res: Response) => {
 });
 
 
-blogsRouter.post('/', (req: Request<{}, {}, ReqBodyBlogType>, res: Response) => {
+blogsRouter.post('/',
+    authGuardMiddleware,
+    blogValidationName,
+    blogValidationYoutubeUrl,
+    validationMiddleware,(req: Request<{}, {}, ReqBodyBlogType>, res: Response) => {
     const newBlog = blogRepository.createBlog(req.body);
     res.status(201).send(newBlog);
 });
 
-blogsRouter.put('/:id', (req: Request<{ id: string }, {}, ReqBodyBlogType>, res: Response) => {
+blogsRouter.put('/:id',
+    authGuardMiddleware,
+    blogValidationName,
+    blogValidationYoutubeUrl,
+    validationMiddleware, (req: Request<{ id: string }, {}, ReqBodyBlogType>, res: Response) => {
     const isUpdated = blogRepository.updateBlog(req.params.id, req.body);
 
     if (isUpdated) {
@@ -41,7 +51,7 @@ blogsRouter.put('/:id', (req: Request<{ id: string }, {}, ReqBodyBlogType>, res:
 });
 
 
-blogsRouter.delete('/:id', (req: Request<{ id: string }>, res: Response) => {
+blogsRouter.delete('/:id', authGuardMiddleware, (req: Request<{ id: string }>, res: Response) => {
     const isDeleted = blogRepository.deleteBlog(req.params.id);
     if (isDeleted) {
         res.status(204).send();
