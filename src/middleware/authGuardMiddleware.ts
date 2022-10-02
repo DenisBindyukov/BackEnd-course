@@ -24,7 +24,6 @@ let base64data = buff.toString('base64');
 
 export const authGuardMiddleware = (req: Request<RequestParams, ResponseBody, RequestBody, RequestQuery>, res: Response, next: NextFunction) => {
     const authHeader = req.headers.authorization;
-    console.log(authHeader)
     if (!authHeader) {
         res.status(401).send()
         return;

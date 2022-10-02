@@ -2,6 +2,7 @@ import {Request, Response, Router} from "express";
 import {postsRepository} from "../repositories/posts-repository";
 import {authGuardMiddleware} from "../middleware/authGuardMiddleware";
 import {
+    blogIdValidation,
     postValidationContent,
     postValidationShortDescription,
     postValidationTitle, validationMiddleware
@@ -40,6 +41,7 @@ postsRouter.post('/',
     postValidationTitle,
     postValidationShortDescription,
     postValidationContent,
+    blogIdValidation,
     validationMiddleware,(req: Request<{}, {}, PostDtoType>, res: Response) => {
         const post = postsRepository.createPost(req.body)
 
@@ -56,6 +58,7 @@ postsRouter.put('/:id',
     postValidationTitle,
     postValidationShortDescription,
     postValidationContent,
+    blogIdValidation,
     validationMiddleware,(req: Request<{ id: string }, {}, PostDtoType>, res: Response) => {
     const postUpdated = postsRepository.updatePost(req.params.id, req.body)
 
