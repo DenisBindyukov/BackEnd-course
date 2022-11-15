@@ -13,5 +13,4 @@ testingRouter.delete('', (req: Request, res: Response) => {
     } else {
         throw new Error('Something went wrong')
     }
-
 });
